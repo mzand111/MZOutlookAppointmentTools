@@ -10,10 +10,6 @@ namespace MZOutlookAppointmentTools.iCalendarTools
     {
         public static RecurrencePattern ParseRecurrencePattern(string recurrenceString, AppointmentItem appointmentItem, DateTime? start)
         {
-
-            // Split the recurrence string into key-value pairs
-            string[] parts = recurrenceString.Split(';');
-
             bool rt_set = false;
             OlRecurrenceType rt = OlRecurrenceType.olRecursDaily;
             bool bd_set = false;
@@ -26,6 +22,9 @@ namespace MZOutlookAppointmentTools.iCalendarTools
             int interval = 0;
             bool endDate_set = false;
             DateTime endDate = DateTime.MinValue;
+
+            // Split the recurrence string into key-value pairs
+            string[] parts = recurrenceString.Split(';');
             Dictionary<String, String> ruleBook = new Dictionary<string, string>();
 
             foreach (string part in parts)
@@ -244,7 +243,7 @@ namespace MZOutlookAppointmentTools.iCalendarTools
         }
 
 
-        public static string GenRecurString(AppointmentItem myItem)
+        public static string GenRecurrenceString(AppointmentItem myItem)
         {
             // Returns a properly formatted recurrence string for the item.
             RecurrencePattern pattern = myItem.GetRecurrencePattern();
@@ -258,7 +257,7 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         if (!pattern.NoEndDate)
                         {
                             str += ";UNTIL=" + FormatICalDateTime(pattern.PatternEndDate);
-                            // Fixing the end date/time issue from 12:00am to 11:59:59pm.
+                            // End datetime issue fix to be from 12:00am to 11:59:59pm.
                             str = str.Replace("T000000", "T235959");
                         }
                         str += ";INTERVAL=" + pattern.Interval;
@@ -308,7 +307,7 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         {
                             str += ";UNTIL=" + FormatICalDateTime(pattern.PatternEndDate);
                         }
-                        str += ";INTERVAL=1";  // Can't do every nth year in Outlook
+                        str += ";INTERVAL=1";  // Outlook does not support, every nth year in 
                         str += ";BYDAY=" + DaysOfWeek("", pattern);
                         break;
 

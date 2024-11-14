@@ -1,0 +1,20 @@
+name: Publish Nuget Package
+
+on: workflow_dispatch
+
+jobs:
+  publish_nuget_package:
+    name: Publish
+    runs-on: windows-latest
+    steps:
+        - uses: actions/checkout@v4
+        - name: Pack
+          run: |
+            dotnet pack ./MZOutlookAppointmentTools.iCalendarRecurrence -c Release
+        - name: Publish
+          env: 
+                API_KEY: ${{secrets.NUGET_API_KY}}
+          run: |
+            dotnet nuget push **/*.nupkg --api-key $API_KEY -s https://api.nuget.org/v3/index.json
+  
+  
