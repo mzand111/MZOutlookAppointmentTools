@@ -1,6 +1,9 @@
 name: Publish Nuget Package
 
-on: workflow_dispatch
+on:
+    push:
+        tags:
+        - '*.*.**'
 
 jobs:
   publish_nuget_package:
@@ -14,6 +17,7 @@ jobs:
         - name: Publish
           env: 
             API_KEY: ${{ secrets.NUGET_API_KEY }}
+
           run: |
             dotnet nuget push **/*.nupkg --source https://api.nuget.org/v3/index.json --api-key ${{secrets.NUGET_API_KEY}} --skip-duplicate
   
