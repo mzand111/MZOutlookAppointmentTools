@@ -11,7 +11,7 @@ namespace MZOutlookAppointmentTools.iCalendarTools
         {
             // Returns a properly formatted recurrence string for the item.
             RecurrencePattern pattern = myItem.GetRecurrencePattern();
-            string str = "RRULE:";
+            string str = "";
             try
             {
                 switch (pattern.RecurrenceType)
@@ -46,7 +46,7 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         str += ";INTERVAL=" + pattern.Interval;
                         if (pattern.Instance == 5)
                         {
-                            str += ";BYWEEK=-1";
+                            str += ";BYSETPOS=-1";
                             str += ";BYDAY=" + DaysOfWeek("", pattern);
                         }
                         else
@@ -71,8 +71,21 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         {
                             str += ";UNTIL=" + FormatICalDateTime(pattern.PatternEndDate);
                         }
-                        str += ";INTERVAL=1";  // Outlook does not support, every nth year in 
-                        str += ";BYDAY=" + DaysOfWeek("", pattern);
+                        str += ";INTERVAL=" + YearlyIntervalNumber(pattern.Interval);
+                        var daysOfWeek = DaysOfWeek("", pattern);
+                        if (!string.IsNullOrWhiteSpace(daysOfWeek))
+                        {
+                            str += ";BYDAY=" + DaysOfWeek("", pattern);
+                        }
+                        if (pattern.MonthOfYear != 0)
+                        {
+                            str += ";BYMONTH=" + MonthNum(pattern.MonthOfYear);
+                        }
+                        if (pattern.DayOfMonth > 0)
+                        {
+                            str += ";BYMONTHDAY=" + DayOfMonth(pattern.DayOfMonth);
+                        }
+
                         break;
 
                     case OlRecurrenceType.olRecursYearNth:
@@ -131,6 +144,14 @@ namespace MZOutlookAppointmentTools.iCalendarTools
         private static string MonthNum(int monthOfYear)
         {
             return monthOfYear.ToString("D2");
+        }
+        private static string DayOfMonth(int dayOfMonth)
+        {
+            return dayOfMonth.ToString("D2");
+        }
+        private static string YearlyIntervalNumber(int yearlyIntervalNumber)
+        {
+            return (yearlyIntervalNumber / 12).ToString("D2");
         }
     }
 }

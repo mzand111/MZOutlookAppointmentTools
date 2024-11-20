@@ -6,6 +6,13 @@ namespace MZOutlookAppointmentTools.iCalendarTools
 {
     public partial class RecurrenceStringTools
     {
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="recurrenceString"></param>
+        /// <param name="appointmentItem"></param>
+        /// <param name="start"></param>
+        /// <returns>Generated Recurrence Pattern</returns>
         public static RecurrencePattern ParseRecurrencePattern(string recurrenceString, AppointmentItem appointmentItem, DateTime? start)
         {
             bool rt_set = false;

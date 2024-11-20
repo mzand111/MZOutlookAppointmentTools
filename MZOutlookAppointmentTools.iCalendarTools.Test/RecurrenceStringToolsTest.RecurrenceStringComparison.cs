@@ -103,4 +103,24 @@ public partial class RecurrenceStringToolsTest
         //Act & Assert
         Assert.False(RecurrenceStringTools.AreEqual(pattern1, pattern2));
     }
+    [Fact]
+    public void Compare_IntervalIgnore()
+    {
+        //Arrange
+        string pattern1 = "FREQ=YEARLY;BYMONTHDAY=7;BYMONTH=3";
+        string pattern2 = "FREQ=YEARLY;BYMONTHDAY=7;BYMONTH=3;INTERVAL=1";
+
+        //Act & Assert
+        Assert.True(RecurrenceStringTools.AreEqual(pattern1, pattern2));
+    }
+    [Fact]
+    public void Compare_ZeroBeforeNumbersIgnore1()
+    {
+        //Arrange
+        string pattern1 = "FREQ=YEARLY;BYMONTHDAY=07;BYMONTH=03";
+        string pattern2 = "FREQ=YEARLY;BYMONTHDAY=7;BYMONTH=3;";
+
+        //Act & Assert
+        Assert.True(RecurrenceStringTools.AreEqual(pattern1, pattern2));
+    }
 }

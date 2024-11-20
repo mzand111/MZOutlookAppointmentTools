@@ -33,7 +33,8 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                 if (string.IsNullOrWhiteSpace(baseItemPart))
                     continue;
                 var tmp = baseItemPart.Split('=');
-
+                if (tmp.Length != 2)
+                    throw new InvalidOperationException($"Could not parse the key-pair value in the pattern string:'{baseItemPart}', The pattern was: '{recurrencePattern1}'");
                 var basePartKey = tmp[0].Trim().ToUpperInvariant();
                 var basePartValue = tmp[1].Trim().ToUpperInvariant();
                 if (basePartKey == "BYDAY")
@@ -52,14 +53,20 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                 var tmp = targetItemPart.Split('=');
                 if (tmp.Length != 2)
                 {
-                    throw new Exception($"Error in parsing this part: {targetItemPart}");
+                    throw new InvalidOperationException($"Could not parse the key-pair value in the pattern string:'{targetItemPart}', The pattern was: '{recurrencePattern2}'");
                 }
                 var targetPartKey = tmp[0].Trim().ToUpperInvariant();
+                var targetPartValue = tmp[1].Trim().ToUpperInvariant();
                 if (!baseKeyValuePairs.ContainsKey(targetPartKey))
                 {
+
+                    if (targetPartKey == "INTERVAL" && double.Parse(targetPartValue) == 1)
+                    {
+                        continue;
+                    }
                     return false;
                 }
-                var targetPartValue = tmp[1].Trim().ToUpperInvariant();
+
                 if (targetPartKey == "BYDAY")
                 {
                     var sortedByDay = SortDaysOfWeek(targetPartValue);
@@ -72,6 +79,17 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                 {
                     if (targetPartValue != baseKeyValuePairs[targetPartKey])
                     {
+                        //If the numeric values are the same, continue (e.g. 02 == 2)
+                        if (double.TryParse(targetPartValue, out double tv))
+                        {
+                            if (double.TryParse(baseKeyValuePairs[targetPartKey], out double bv))
+                            {
+                                if (tv == bv)
+                                {
+                                    continue;
+                                }
+                            }
+                        }
                         return false;
                     }
                 }
