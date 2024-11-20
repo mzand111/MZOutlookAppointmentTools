@@ -185,7 +185,8 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                     else
                     {
                         pattern.RecurrenceType = rt;
-                        pattern.DayOfWeekMask = bd;
+                        if (bd_set)
+                            pattern.DayOfWeekMask = bd;
                     }
                 }
                 if (interval_set)

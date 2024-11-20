@@ -4,6 +4,62 @@ namespace MZOutlookAppointmentTools.iCalendarTools.Test;
 
 public partial class RecurrenceStringToolsTest
 {
+    #region Daily
+    [Fact]
+    public void DAILY1()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=DAILY";
+        var itemStart = new DateTime(2024, 11, 13);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        //Assert
+        Assert.Equal(OlRecurrenceType.olRecursDaily, recPattern.RecurrenceType);
+        Assert.Equal((OlDaysOfWeek)0, recPattern.DayOfWeekMask);
+        Assert.Equal(0, recPattern.Instance);
+    }
+    [Fact]
+    public void DAILY2()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=DAILY;INTERVAL=2";
+        var itemStart = new DateTime(2024, 11, 13);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        //Assert
+        Assert.Equal(OlRecurrenceType.olRecursDaily, recPattern.RecurrenceType);
+        Assert.Equal((OlDaysOfWeek)0, recPattern.DayOfWeekMask);
+        Assert.Equal(0, recPattern.Instance);
+        Assert.Equal(2, recPattern.Interval);
+    }
+    [Fact]
+    public void DAILY_ByWeekDay()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR";
+        var itemStart = new DateTime(2024, 11, 13);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        //Assert
+        Assert.Equal(OlRecurrenceType.olRecursWeekly, recPattern.RecurrenceType);
+        var expectedMask = OlDaysOfWeek.olMonday | OlDaysOfWeek.olTuesday | OlDaysOfWeek.olWednesday | OlDaysOfWeek.olThursday | OlDaysOfWeek.olFriday;
+        Assert.Equal(expectedMask, recPattern.DayOfWeekMask);
+        Assert.Equal(0, recPattern.Instance);
+        Assert.Equal(1, recPattern.Interval);
+    }
+    #endregion
     #region Weekly
     [Fact]
     public void Weekly1()
