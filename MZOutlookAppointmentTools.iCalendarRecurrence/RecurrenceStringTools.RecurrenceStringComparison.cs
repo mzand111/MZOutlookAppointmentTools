@@ -6,7 +6,13 @@ namespace MZOutlookAppointmentTools.iCalendarTools
 {
     public partial class RecurrenceStringTools
     {
-
+        /// <summary>
+        /// Compares two recurrence pattern strings for equality.
+        /// </summary>
+        /// <param name="recurrencePattern1">The first recurrence pattern string.</param>
+        /// <param name="recurrencePattern2">The second recurrence pattern string.</param>
+        /// <returns>True if the recurrence patterns are equal, otherwise false.</returns>
+        /// <exception cref="InvalidOperationException">Thrown when a pattern string cannot be parsed.</exception>
         public static bool AreEqual(string recurrencePattern1, string recurrencePattern2)
         {
             if (string.IsNullOrWhiteSpace(recurrencePattern1))

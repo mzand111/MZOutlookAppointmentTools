@@ -7,14 +7,19 @@ namespace MZOutlookAppointmentTools.iCalendarTools
     public partial class RecurrenceStringTools
     {
         /// <summary>
-        /// 
+        /// Parses a recurrence pattern string and applies it to an AppointmentItem.
         /// </summary>
-        /// <param name="recurrenceString"></param>
-        /// <param name="appointmentItem"></param>
-        /// <param name="start"></param>
-        /// <returns>Generated Recurrence Pattern</returns>
-        public static RecurrencePattern ParseRecurrencePattern(string recurrenceString, AppointmentItem appointmentItem, DateTime? start)
+        /// <param name="recurrenceString">The recurrence pattern string.</param>
+        /// <param name="appointmentItem">The appointment item to apply the recurrence pattern to.</param>
+        /// <param name="start">The start date of the recurrence pattern.</param>
+        /// <returns>The parsed RecurrencePattern object.</returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public static void SetRecurrencePattern(string recurrenceString, AppointmentItem appointmentItem, DateTime? start)
         {
+            if (string.IsNullOrEmpty(recurrenceString))
+            {
+                appointmentItem.ClearRecurrencePattern();
+            }
             bool rt_set = false;
             OlRecurrenceType rt = OlRecurrenceType.olRecursDaily;
             bool bd_set = false;
@@ -198,14 +203,19 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                 {
                     pattern.PatternEndDate = endDate;
                 }
-                return pattern;
+
             }
             finally
             {
-
+                if (pattern != null)
+                    System.Runtime.InteropServices.Marshal.ReleaseComObject(pattern);
             }
         }
-
+        /// <summary>
+        /// Converts recurrence days to Outlook OlDaysOfWeek mask
+        /// </summary>
+        /// <param name="byDay"></param>
+        /// <returns></returns>
         private static OlDaysOfWeek ParseDayOfWeekMask(string byDay)
         {
             OlDaysOfWeek mask = 0;

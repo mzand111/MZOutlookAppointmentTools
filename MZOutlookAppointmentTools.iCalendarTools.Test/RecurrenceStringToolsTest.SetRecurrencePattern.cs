@@ -16,7 +16,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
         Assert.Equal(OlRecurrenceType.olRecursDaily, recPattern.RecurrenceType);
         Assert.Equal((OlDaysOfWeek)0, recPattern.DayOfWeekMask);
@@ -33,7 +34,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
         Assert.Equal(OlRecurrenceType.olRecursDaily, recPattern.RecurrenceType);
         Assert.Equal((OlDaysOfWeek)0, recPattern.DayOfWeekMask);
@@ -45,13 +47,14 @@ public partial class RecurrenceStringToolsTest
     {
         //Arrange
 
-        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        AppointmentItem aItem = (AppointmentItem)ApplicationInstance.CreateItem(OlItemType.olAppointmentItem);
         string pattern = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR";
         var itemStart = new DateTime(2024, 11, 13);
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
         Assert.Equal(OlRecurrenceType.olRecursWeekly, recPattern.RecurrenceType);
         var expectedMask = OlDaysOfWeek.olMonday | OlDaysOfWeek.olTuesday | OlDaysOfWeek.olWednesday | OlDaysOfWeek.olThursday | OlDaysOfWeek.olFriday;
@@ -72,7 +75,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
         Assert.Equal(OlRecurrenceType.olRecursWeekly, recPattern.RecurrenceType);
         Assert.Equal(OlDaysOfWeek.olSaturday, recPattern.DayOfWeekMask);
@@ -89,7 +93,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
         Assert.Equal(OlRecurrenceType.olRecursWeekly, recPattern.RecurrenceType);
         var expectedMask = OlDaysOfWeek.olMonday | OlDaysOfWeek.olTuesday | OlDaysOfWeek.olWednesday;
@@ -108,7 +113,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
         Assert.Equal(OlRecurrenceType.olRecursWeekly, recPattern.RecurrenceType);
         var expectedMask = OlDaysOfWeek.olMonday | OlDaysOfWeek.olTuesday | OlDaysOfWeek.olWednesday;
@@ -130,7 +136,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
         Assert.Equal(OlRecurrenceType.olRecursWeekly, recPattern.RecurrenceType);
         Assert.Equal(OlDaysOfWeek.olSaturday, recPattern.DayOfWeekMask);
@@ -150,7 +157,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
         Assert.Equal(OlRecurrenceType.olRecursMonthly, recPattern.RecurrenceType);
         Assert.Equal(12, recPattern.DayOfMonth);
@@ -172,7 +180,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
 
         Assert.Equal(OlRecurrenceType.olRecursMonthNth, recPattern.RecurrenceType);
@@ -193,7 +202,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
 
         Assert.Equal(OlRecurrenceType.olRecursMonthNth, recPattern.RecurrenceType);
@@ -217,7 +227,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
 
         Assert.Equal(OlRecurrenceType.olRecursYearly, recPattern.RecurrenceType);
@@ -238,7 +249,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
 
         Assert.Equal(OlRecurrenceType.olRecursYearly, recPattern.RecurrenceType);
@@ -262,7 +274,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
 
         Assert.Equal(OlRecurrenceType.olRecursYearNth, recPattern.RecurrenceType);
@@ -283,7 +296,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
 
         Assert.Equal(OlRecurrenceType.olRecursYearNth, recPattern.RecurrenceType);
@@ -304,7 +318,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
 
         Assert.Equal(OlRecurrenceType.olRecursYearNth, recPattern.RecurrenceType);
@@ -325,7 +340,8 @@ public partial class RecurrenceStringToolsTest
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
         //Act
-        var recPattern = RecurrenceStringTools.ParseRecurrencePattern(pattern, aItem, itemStart);
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
         //Assert
 
         Assert.Equal(OlRecurrenceType.olRecursYearNth, recPattern.RecurrenceType);

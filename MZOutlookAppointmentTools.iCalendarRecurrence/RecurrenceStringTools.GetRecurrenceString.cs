@@ -6,10 +6,16 @@ namespace MZOutlookAppointmentTools.iCalendarTools
 {
     public partial class RecurrenceStringTools
     {
-        //Returns standard recurrence pattern string from RecurrencePattern of an Outlook AppoingmentItem
+        /// <summary>
+        /// Generates an iCalendar (iCal) formatted recurrence string for a given AppointmentItem.
+        /// </summary>
+        /// <param name="myItem">The appointment item to generate the recurrence string for.</param>
+        /// <returns>A formatted recurrence string if the item is recurring; otherwise, an empty string.</returns>
         public static string GetRecurrenceString(AppointmentItem myItem)
         {
             // Returns a properly formatted recurrence string for the item.
+            if (!myItem.IsRecurring)
+                return string.Empty;
             RecurrencePattern pattern = myItem.GetRecurrencePattern();
             string str = "";
             try
