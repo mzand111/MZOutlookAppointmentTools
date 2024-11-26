@@ -7,7 +7,7 @@ This library simplifies the creation of recurring Outlook AppointmentItems using
   2. The "WKST" is not supported as it seems that there are no way to handle it in Outlook.  
   3. Patterns containing "BYWEEKNO" are not supported. 
 
-## Supported Samples
+## Supported Pattern Samples
   -  "FREQ=WEEKLY;BYDAY=SA"
   -  "FREQ=WEEKLY;BYDAY=MO,TU,WE"
   -  "FREQ=WEEKLY;BYDAY=MO,TU,WE;INTERVAL=2"
@@ -18,3 +18,38 @@ This library simplifies the creation of recurring Outlook AppointmentItems using
   -  "FREQ=YEARLY;BYDAY=FR;BYMONTH=11;BYSETPOS=2"
   -  "FREQ=YEARLY;BYDAY=FR;BYMONTH=11;BYSETPOS=3;INTERVAL=3"
   -  "FREQ=YEARLY;BYDAY=MO,TU,WE,TH,FR;BYMONTH=9;BYSETPOS=1"
+
+## Usage:
+### SetRecurrencePattern:
+
+```cs
+ AppointmentItem aItem = (AppointmentItem)ApplicationInstance.CreateItem(OlItemType.olAppointmentItem);
+ string pattern = "FREQ=WEEKLY;BYDAY=MO,TU,WE,TH,FR";
+ RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+ var recPattern = aItem.GetRecurrencePattern();
+//Expected values:
+//  recPattern.RecurrenceType == OlRecurrenceType.olRecursWeekly
+//  recPattern.DayOfWeekMask == OlDaysOfWeek.olMonday | OlDaysOfWeek.olTuesday | OlDaysOfWeek.olWednesday | OlDaysOfWeek.olThursday | OlDaysOfWeek.olFriday
+//  recPattern.Instance == 0
+//  recPattern.Interval == 1
+```
+
+### GetRecurrencePattern
+
+```cs
+ AppointmentItem aItem = (AppointmentItem)ApplicationInstance.CreateItem(OlItemType.olAppointmentItem);
+ var occ = aItem.GetRecurrencePattern();
+ occ.RecurrenceType = OlRecurrenceType.olRecursDaily;
+ occ.Interval = 1;
+ aItem.Save();
+ var item = RecurrenceStringTools.GetRecurrenceString(aItem); // "FREQ=DAILY;INTERVAL=1"
+```
+
+### AreEqual
+```cs
+  string pattern1 = "FREQ=WEEKLY;BYDAY=MO,TU,WE";
+  string pattern2 = "FREQ=WEEKLY;BYDAY=TU,WE,MO";
+  var areEqual = RecurrenceStringTools.AreEqual(pattern1, pattern2);// true
+```
+
+More samples could be found in the test project. 
