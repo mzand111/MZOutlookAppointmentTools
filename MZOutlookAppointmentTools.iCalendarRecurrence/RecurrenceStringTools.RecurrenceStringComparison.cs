@@ -52,6 +52,7 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                     baseKeyValuePairs.Add(basePartKey, basePartValue);
                 }
             }
+            List<string> matchedItems = new List<string>();
             foreach (var targetItemPart in targetItemParts)
             {
                 if (string.IsNullOrWhiteSpace(targetItemPart))
@@ -68,6 +69,7 @@ namespace MZOutlookAppointmentTools.iCalendarTools
 
                     if (targetPartKey == "INTERVAL" && double.Parse(targetPartValue) == 1)
                     {
+                        matchedItems.Add(targetPartKey);
                         continue;
                     }
                     return false;
@@ -92,14 +94,48 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                             {
                                 if (tv == bv)
                                 {
+                                    matchedItems.Add(targetPartKey);
                                     continue;
                                 }
                             }
+                        }
+                        else
+                            if (targetPartKey == "BYSETPOS")
+                        {
+                            if (baseKeyValuePairs.ContainsKey("BYDAY") && (baseKeyValuePairs["FREQ"] == "MONTHLY" || baseKeyValuePairs["FREQ"] == "YEARLY"))
+                            {
+                                if (double.TryParse(targetPartValue, out double bv))
+                                {
+                                    if (1 == bv)
+                                        continue;
+
+                                }
+                            }
+
+                        }
+
+                        return false;
+                    }
+                }
+                matchedItems.Add(targetPartKey);
+            }
+
+            foreach (var kvp in baseKeyValuePairs.Keys)
+            {
+                if (!string.IsNullOrWhiteSpace(kvp))
+                {
+                    //WKST is not supported
+                    if (kvp != "WKST" && !matchedItems.Contains(kvp))
+                    {
+                        if (kvp == "BYSETPOS")
+                        {
+
                         }
                         return false;
                     }
                 }
             }
+
             return true;
         }
         private static readonly string[] WeekdaysOrder = { "SU", "MO", "TU", "WE", "TH", "FR", "SA" };

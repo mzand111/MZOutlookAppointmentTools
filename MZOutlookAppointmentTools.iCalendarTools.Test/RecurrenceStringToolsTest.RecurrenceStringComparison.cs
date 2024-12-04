@@ -123,4 +123,25 @@ public partial class RecurrenceStringToolsTest
         //Act & Assert
         Assert.True(RecurrenceStringTools.AreEqual(pattern1, pattern2));
     }
+    [Fact]
+    public void Compare_IssueFix1()
+    {
+        //Arrange
+        string pattern1 = "FREQ=DAILY;UNTIL=20250216T235959Z;INTERVAL=1";
+        string pattern2 = "FREQ=DAILY;UNTIL=20250216T235959Z;INTERVAL=1";
+
+        //Act & Assert
+        Assert.True(RecurrenceStringTools.AreEqual(pattern1, pattern2));
+    }
+    [Fact]
+    public void Compare_BySetPosIssueFix1()
+    {
+        //Arrange
+        string pattern1 = "FREQ=MONTHLY;INTERVAL=1;BYDAY=FR;BYSETPOS=1";
+        //This pattern is somehow invalid, but when not sent, BYSETPOS should be considered as 1. 
+        string pattern2 = "FREQ=MONTHLY;INTERVAL=1;BYDAY=FR";
+
+        //Act & Assert
+        Assert.False(RecurrenceStringTools.AreEqual(pattern1, pattern2));
+    }
 }

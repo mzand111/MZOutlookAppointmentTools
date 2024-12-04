@@ -136,6 +136,8 @@ public partial class RecurrenceStringToolsTest
         RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
         aItem.Save();
         var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        var hh = aItem.GetRecurrencePattern();
+
         //Assert
         var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
         Assert.True(gg);
@@ -169,6 +171,42 @@ public partial class RecurrenceStringToolsTest
 
         AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
         string pattern = "FREQ=MONTHLY;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=-1";
+        var itemStart = new DateTime(2024, 11, 13);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert        
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+        Assert.True(gg);
+    }
+    [Fact]
+    public void Combo_MonthlyNthSetPos_Existence1()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=MONTHLY;INTERVAL=1;BYDAY=FR";
+        var itemStart = new DateTime(2024, 11, 13);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert        
+        var gg = RecurrenceStringTools.AreEqual("FREQ=WEEKLY;INTERVAL=1;BYDAY=FR", recPatternStr);
+        Assert.True(gg);
+    }
+    [Fact]
+    public void Combo_MonthlyNthSetPos_Existence2()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=MONTHLY;INTERVAL=1;BYDAY=FR;BYSETPOS=1";
         var itemStart = new DateTime(2024, 11, 13);
         aItem.Start = itemStart;
         aItem.End = itemStart.AddMinutes(30);
@@ -297,4 +335,65 @@ public partial class RecurrenceStringToolsTest
         Assert.True(gg);
     }
     #endregion
+
+    [Fact]
+    public void Combo_Daily1()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=Daily";
+        var itemStart = new DateTime(2024, 11, 27, 8, 15, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+        Assert.True(gg);
+    }
+    [Fact]
+    public void Combo_DailyExceptions()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=Daily";
+        var itemStart = new DateTime(2024, 11, 27, 20, 15, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert
+        var patternObj = aItem.GetRecurrencePattern();
+        var occ1 = patternObj.GetOccurrence(new DateTime(2024, 11, 27, 20, 15, 0));
+        var occ2 = patternObj.GetOccurrence(new DateTime(2024, 11, 28, 20, 15, 0));
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+        Assert.True(gg);
+    }
+    [Fact]
+    public void Combo_MonthBySetPos()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=MONTHLY;BYDAY=FR;BYSETPOS=1";
+        var itemStart = new DateTime(2024, 11, 01, 11, 30, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert
+        var patternObj = aItem.GetRecurrencePattern();
+
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+
+        Assert.True(gg, "recPatternStr");
+    }
 }

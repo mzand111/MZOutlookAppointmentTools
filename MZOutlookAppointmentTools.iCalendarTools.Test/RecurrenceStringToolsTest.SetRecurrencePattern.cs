@@ -213,6 +213,28 @@ public partial class RecurrenceStringToolsTest
         Assert.Equal(5, recPattern.Instance);
         Assert.Equal(1, recPattern.Interval);
     }
+    [Fact]
+    public void MonthlyNth3_WhenBySetPosIsNotSet()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=MONTHLY;INTERVAL=1;BYDAY=FR";
+        var itemStart = new DateTime(2024, 11, 01, 11, 30, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(30);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        var recPattern = aItem.GetRecurrencePattern();
+        //Assert
+
+        Assert.Equal(OlRecurrenceType.olRecursWeekly, recPattern.RecurrenceType);
+        var expectedMask = OlDaysOfWeek.olFriday;
+        Assert.Equal(0, recPattern.DayOfMonth);
+        Assert.Equal(expectedMask, recPattern.DayOfWeekMask);
+        Assert.Equal(0, recPattern.Instance);
+        Assert.Equal(1, recPattern.Interval);
+    }
     #endregion
 
     #region MonthNth

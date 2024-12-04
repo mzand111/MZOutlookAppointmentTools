@@ -109,6 +109,8 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         if (bsp_set)
                         //If BYSETPOS is set the recurrence is olRecursMonthNth
                         {
+
+
                             pattern.RecurrenceType = OlRecurrenceType.olRecursMonthNth;
                             pattern.Instance = bsp;
                             if (bd_set)
@@ -119,30 +121,55 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                                 {
                                     //In Outlook this is simply a monthly recurring
                                     pattern.RecurrenceType = OlRecurrenceType.olRecursMonthly;
+                                    bd_set = false;
                                 }
-                                bd_set = false;
-                            }
-                            bsp_set = false;
-                        }
-                        else if (ruleBook.ContainsKey("BYDAY"))
-                        //If BYDAY is set to -1, the recurrence is olRecursMonthNth
-                        {
-                            if (ruleBook["BYDAY"].StartsWith("-1"))
-                            {
-                                pattern.RecurrenceType = OlRecurrenceType.olRecursMonthNth;
-                                pattern.Instance = 5;
-                                pattern.DayOfWeekMask = ParseDayOfWeekMask(ruleBook["BYDAY"].TrimStart("-1".ToCharArray()));
-                            }
-                        }
-                        else if (ruleBook.ContainsKey("BYMONTHDAY"))
-                        {
-                            pattern.RecurrenceType = OlRecurrenceType.olRecursMonthly;
-                            if (bsp_set)
-                            {
-                                pattern.Instance = bsp;
+                                else
+                                {
+                                    pattern.Instance = bsp;
+                                }
+
+
                                 bsp_set = false;
                             }
-                            pattern.DayOfMonth = Int16.Parse(ruleBook["BYMONTHDAY"]);
+                            else if (ruleBook.ContainsKey("BYDAY"))
+                            //If BYDAY is set to -1, the recurrence is olRecursMonthNth
+                            {
+                                if (ruleBook["BYDAY"].StartsWith("-1"))
+                                {
+                                    pattern.RecurrenceType = OlRecurrenceType.olRecursMonthNth;
+                                    pattern.Instance = 5;
+                                    pattern.DayOfWeekMask = ParseDayOfWeekMask(ruleBook["BYDAY"].TrimStart("-1".ToCharArray()));
+                                }
+                            }
+                            else if (ruleBook.ContainsKey("BYMONTHDAY"))
+                            {
+                                pattern.RecurrenceType = OlRecurrenceType.olRecursMonthly;
+                                if (bsp_set)
+                                {
+                                    pattern.Instance = bsp;
+                                    bsp_set = false;
+                                }
+                                pattern.DayOfMonth = Int16.Parse(ruleBook["BYMONTHDAY"]);
+
+                            }
+                        }
+                        else
+                        //If BYSETPOS is not set and BYDAY is set, recurrence is actually a simply weekly :olRecursWeekly
+                        {
+                            if (bd_set)
+                            {
+                                pattern.RecurrenceType = OlRecurrenceType.olRecursWeekly;
+                                pattern.DayOfWeekMask = bd;
+                            }
+                            else if (ruleBook.ContainsKey("BYMONTHDAY"))
+                            {
+                                pattern.RecurrenceType = OlRecurrenceType.olRecursMonthly;
+                                pattern.DayOfMonth = Int16.Parse(ruleBook["BYMONTHDAY"]);
+                            }
+                            else
+                            {
+                                throw new System.Exception($"Not supported recurrence string: '{recurrenceString}' Expecting BYDAY");
+                            }
 
                         }
                     }
@@ -192,6 +219,11 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         pattern.RecurrenceType = rt;
                         if (bd_set)
                             pattern.DayOfWeekMask = bd;
+                        if (bsp_set)
+                        {
+                            int gInstance = Convert.ToInt16(ruleBook["BYSETPOS"]);
+                            pattern.Instance = (gInstance == -1) ? 5 : gInstance;
+                        }
                     }
                 }
                 if (interval_set)

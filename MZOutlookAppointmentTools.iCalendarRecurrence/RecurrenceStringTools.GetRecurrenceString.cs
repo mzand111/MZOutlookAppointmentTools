@@ -41,6 +41,10 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         }
                         str += ";INTERVAL=" + pattern.Interval;
                         str += ";BYMONTHDAY=" + pattern.DayOfMonth;
+                        //if (pattern.Instance == 5)
+                        //{
+                        //    str += ";BYSETPOS=" + pattern.Instance;
+                        //}
                         break;
 
                     case OlRecurrenceType.olRecursMonthNth:
@@ -57,7 +61,11 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         }
                         else
                         {
-                            str += ";BYDAY=" + DaysOfWeek(WeekNum(pattern.Instance), pattern);
+                            if (pattern.Instance > 0)
+                            {
+                                str += ";BYDAY=" + DaysOfWeek(WeekNum(pattern.Instance), pattern);
+                                str += ";BYSETPOS=" + pattern.Instance.ToString();
+                            }
                         }
                         break;
 
@@ -102,6 +110,19 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         }
                         str += ";BYMONTH=" + MonthNum(pattern.MonthOfYear);
                         str += ";BYDAY=" + DaysOfWeek(WeekNum(pattern.Instance), pattern);
+                        if (pattern.Instance == 5)
+                        {
+                            str += ";BYSETPOS=-1";
+                        }
+                        else
+                        {
+                            if (pattern.Instance > 0)
+                            {
+                                str += ";BYSETPOS=" + pattern.Instance.ToString();
+                            }
+
+                        }
+                        str += ";INTERVAL=" + YearlyIntervalNumber(pattern.Interval);
                         break;
                 }
 
