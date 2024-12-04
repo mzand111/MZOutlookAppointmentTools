@@ -5,7 +5,8 @@ This library simplifies the creation of recurring Outlook AppointmentItems using
 ## Limitations
   1. The library currently just supports these recurrence types:  "DAILY" / "WEEKLY" / "MONTHLY" / "YEARLY". This is because these are the only supported types by Outlook. As a consequence all the related keywords (e.g. "BYHOUR","BYMINUTE","BYSECOND") are not supported.  
   2. The "WKST" is not supported as it seems that there are no way to handle it in Outlook.  
-  3. Patterns containing "BYWEEKNO" are not supported. 
+  3. Patterns containing "BYWEEKNO" are not supported.
+  4. Patterns containing BYDAY with numbers such as "FREQ=MONTHLY;INTERVAL=1;BYDAY=1FR,3MO" Are not supported
 
 ## Supported Pattern Samples
   -  "FREQ=WEEKLY;BYDAY=SA"
@@ -53,3 +54,6 @@ This library simplifies the creation of recurring Outlook AppointmentItems using
 ```
 
 More samples could be found in the test project. 
+
+## Discution
+1. This pattern "FREQ=MONTHLY;INTERVAL=1;BYDAY=FR" would be converted to a `olRecursWeekly` as `olRecursMonthNth` requires the `instance` field to be set to a value from 1 to 5. So when it is converted back to recurrence rule the value would be simply "FREQ=WEEKLY;INTERVAL=1;BYDAY=FR" (Check these tests: `Combo_MonthlyNthSetPos_Existence1` and `Combo_MonthlyNthSetPos_Existence2` in `RecurrenceStringToolsTest`). Moreover, whenever we get the recurrence pattern from an AppointmentItem with  `olRecursMonthNth`, we always include the "BYSETPOS".
