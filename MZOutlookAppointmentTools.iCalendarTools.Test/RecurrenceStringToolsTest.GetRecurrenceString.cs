@@ -37,6 +37,7 @@ public partial class RecurrenceStringToolsTest
     }
     [Fact]
     public void GetString_MonthlyNoBySetPos2()
+    //By default BYSetPos is set to 2 as soon as the RecurrenceType is set to olRecursMonthNth
     {
         AppointmentItem aItem = (AppointmentItem)ApplicationInstance.CreateItem(OlItemType.olAppointmentItem);
         var occ = aItem.GetRecurrencePattern();
@@ -45,6 +46,6 @@ public partial class RecurrenceStringToolsTest
         occ.DayOfWeekMask = OlDaysOfWeek.olFriday;
         aItem.Save();
         var item = RecurrenceStringTools.GetRecurrenceString(aItem);
-        Assert.Equal("FREQ=MONTHLY;INTERVAL=1;BYDAY=FR;BYSETPOS=1", item);
+        Assert.Equal("FREQ=MONTHLY;INTERVAL=1;BYDAY=FR;BYSETPOS=2", item);
     }
 }

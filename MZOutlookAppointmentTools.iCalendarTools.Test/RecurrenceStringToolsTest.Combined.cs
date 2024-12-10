@@ -396,4 +396,36 @@ public partial class RecurrenceStringToolsTest
 
         Assert.True(gg, "recPatternStr");
     }
+
+    [Fact]
+    public void Combo_EndTimeTest()
+    {
+        //Arrange
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        var itemStart = new DateTime(2023, 11, 01, 11, 30, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(15);
+        var occ = aItem.GetRecurrencePattern();
+        occ.RecurrenceType = OlRecurrenceType.olRecursMonthNth;
+
+        occ.Interval = 1;
+        occ.Instance = 1;
+        var expectedMask = OlDaysOfWeek.olMonday | OlDaysOfWeek.olTuesday | OlDaysOfWeek.olWednesday | OlDaysOfWeek.olThursday | OlDaysOfWeek.olFriday;
+        occ.DayOfWeekMask = expectedMask;
+        occ.PatternEndDate = new DateTime(2024, 11, 1);
+        aItem.Save();
+        var recPat = RecurrenceStringTools.GetRecurrenceString(aItem);
+        if (occ != null)
+            System.Runtime.InteropServices.Marshal.ReleaseComObject(occ);
+        Assert.Equal("FREQ=MONTHLY;UNTIL=20241101T000000Z;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=1", recPat);
+        var newPatternWithNoEnd = "FREQ=MONTHLY;INTERVAL=1;BYDAY=MO,TU,WE,TH,FR;BYSETPOS=1";
+        RecurrenceStringTools.SetRecurrencePattern(newPatternWithNoEnd, aItem, itemStart);
+        var occ2 = aItem.GetRecurrencePattern();
+        var et = occ2.PatternEndDate;
+        var eto = occ2.NoEndDate;
+        Assert.True(eto);
+        var newRec = RecurrenceStringTools.GetRecurrenceString(aItem);
+        Assert.Equal(newPatternWithNoEnd, newRec);
+        var hh = "";
+    }
 }

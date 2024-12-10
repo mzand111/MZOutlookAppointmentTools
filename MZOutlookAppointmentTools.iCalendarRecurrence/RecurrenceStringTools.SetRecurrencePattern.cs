@@ -109,8 +109,6 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                         if (bsp_set)
                         //If BYSETPOS is set the recurrence is olRecursMonthNth
                         {
-
-
                             pattern.RecurrenceType = OlRecurrenceType.olRecursMonthNth;
                             pattern.Instance = bsp;
                             if (bd_set)
@@ -234,6 +232,10 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                 if (endDate_set)
                 {
                     pattern.PatternEndDate = endDate;
+                }
+                else
+                {
+                    pattern.NoEndDate = true;
                 }
 
             }
