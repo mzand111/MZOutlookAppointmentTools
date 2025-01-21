@@ -144,4 +144,14 @@ public partial class RecurrenceStringToolsTest
         //Act & Assert
         Assert.False(RecurrenceStringTools.AreEqual(pattern1, pattern2));
     }
+    [Fact]
+    public void Compare_Daily1()
+    {
+        //Arrange
+        string pattern1 = "FREQ=DAILY;UNTIL=20250216T235959Z;INTERVAL=1";
+        string pattern2 = "FREQ=DAILY;UNTIL=20250216T000000Z;INTERVAL=1";
+
+        //Act & Assert
+        Assert.True(RecurrenceStringTools.AreEqual(pattern1, pattern2));
+    }
 }

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
-    <Version>0.9.4</Version>
+    <Version>0.9.5</Version>
     <Authors>Mahdi Zand</Authors>
     <Description>This library simplifies the creation of recurring Outlook AppointmentItems using standard iCalendar recurrence patterns. It also enables the retrieval of recurrence pattern strings from existing Outlook recurring AppointmentItems.</Description>
     <PackageReadmeFile>README.md</PackageReadmeFile>
@@ -10,6 +10,8 @@
     <RepositoryType>git</RepositoryType>
     <PackageTags>.net standard, Outlook, Interop, VSTO, iCalendar, Recurrence Pattern</PackageTags>
     <Title>MZ Outlook Appointment Tools</Title>
+    <Platforms>AnyCPU;x86;x64</Platforms>
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
   <ItemGroup>

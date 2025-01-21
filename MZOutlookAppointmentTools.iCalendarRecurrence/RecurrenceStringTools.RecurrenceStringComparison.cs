@@ -99,8 +99,7 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                                 }
                             }
                         }
-                        else
-                            if (targetPartKey == "BYSETPOS")
+                        else if (targetPartKey == "BYSETPOS")
                         {
                             if (baseKeyValuePairs.ContainsKey("BYDAY") && (baseKeyValuePairs["FREQ"] == "MONTHLY" || baseKeyValuePairs["FREQ"] == "YEARLY"))
                             {
@@ -112,6 +111,24 @@ namespace MZOutlookAppointmentTools.iCalendarTools
                                 }
                             }
 
+                        }
+                        else if (targetPartKey == "UNTIL" && baseKeyValuePairs["FREQ"] == "DAILY")
+                        {
+                            var sps = baseKeyValuePairs[targetPartKey].Split('T');
+                            var spt = targetPartValue.Split('T');
+                            if (sps.Length == 2 && spt.Length == 2)
+                            {
+                                if (sps[0] == spt[0] &&
+                                    ((sps[1] == "000000Z" && spt[1] == "235959Z")
+                                    ||
+                                    (spt[1] == "000000Z" && sps[1] == "235959Z")
+                                    ))
+                                //This is caused by the fix we added
+                                {
+                                    matchedItems.Add(targetPartKey);
+                                    continue;
+                                }
+                            }
                         }
 
                         return false;

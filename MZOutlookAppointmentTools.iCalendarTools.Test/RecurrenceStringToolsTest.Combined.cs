@@ -2,6 +2,9 @@
 
 namespace MZOutlookAppointmentTools.iCalendarTools.Test;
 
+/// <summary>
+/// If encountered with com+ error 0x80010105, try this link :https://learn.microsoft.com/en-us/troubleshoot/windows-server/application-management/error-8008005-when-start-complus-applications
+/// </summary>
 public partial class RecurrenceStringToolsTest
 {
     #region Weekly
@@ -427,5 +430,102 @@ public partial class RecurrenceStringToolsTest
         var newRec = RecurrenceStringTools.GetRecurrenceString(aItem);
         Assert.Equal(newPatternWithNoEnd, newRec);
         var hh = "";
+    }
+    [Fact]
+    public void Combo_IssueInPattern()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=MONTHLY;BYDAY=SA;BYSETPOS=3";
+        var itemStart = new DateTime(2024, 11, 21, 9, 0, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(15);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert
+        var patternObj = aItem.GetRecurrencePattern();
+
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+
+        Assert.True(gg, $"Expected {recPatternStr}, actual {pattern}");
+    }
+    [Fact]
+    public void Combo_MakeGoogleVoiceCal()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=WEEKLY;INTERVAL=1;BYDAY=SA";
+        var itemStart = new DateTime(2025, 01, 18, 07, 15, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(15);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert
+        var patternObj = aItem.GetRecurrencePattern();
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+        Assert.True(gg);
+    }
+    [Fact]
+    public void Combo_Daily2()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=DAILY;INTERVAL=1";
+        var itemStart = new DateTime(2025, 01, 21, 07, 15, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(15);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert
+        var patternObj = aItem.GetRecurrencePattern();
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+        Assert.True(gg, $"Expected {pattern} but was {recPatternStr}");
+    }
+    [Fact]
+    public void Combo_Daily3()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=DAILY";
+        var itemStart = new DateTime(2025, 01, 21, 07, 15, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(15);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert
+        var patternObj = aItem.GetRecurrencePattern();
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+        Assert.True(gg, $"Expected {pattern} but was {recPatternStr}");
+    }
+    [Fact]
+    public void Combo_Daily4()
+    {
+        //Arrange
+
+        AppointmentItem aItem = (Microsoft.Office.Interop.Outlook.AppointmentItem)ApplicationInstance.CreateItem(Microsoft.Office.Interop.Outlook.OlItemType.olAppointmentItem);
+        string pattern = "FREQ=DAILY;UNTIL=20300101T000000Z";
+        var itemStart = new DateTime(2025, 01, 21, 07, 15, 0);
+        aItem.Start = itemStart;
+        aItem.End = itemStart.AddMinutes(15);
+        //Act
+        RecurrenceStringTools.SetRecurrencePattern(pattern, aItem, itemStart);
+        aItem.Save();
+        var recPatternStr = RecurrenceStringTools.GetRecurrenceString(aItem);
+        //Assert
+        var patternObj = aItem.GetRecurrencePattern();
+        var gg = RecurrenceStringTools.AreEqual(pattern, recPatternStr);
+        Assert.True(gg, $"Expected {pattern} but was {recPatternStr}");
     }
 }
